@@ -16,7 +16,8 @@
 define( [ 'common-ui/angular',
           'common-ui/angular-route',
           'common-ui/angular-ui-bootstrap',
-          'angular-translate'
+          'angular-translate',
+          './modules/translation'
     ],
 
     function ( angular, angularRoute, uiBootstrap ) {
@@ -24,7 +25,13 @@ define( [ 'common-ui/angular',
       console.log("Required app.js ");
 
       // define application module
-      var app = angular.module( 'marketplace', [ 'ngRoute', 'ui.bootstrap', 'ngSanitize', 'pascalprecht.translate' ] );
+      var app = angular.module('marketplace', [
+          'ngRoute', 
+          'ui.bootstrap',
+          'ngSanitize',
+          'pascalprecht.translate',
+          'pentaho.common-ui.translate'
+      ]);
 
       app.config(['$routeProvider', function( $routeProvider ) {
 
@@ -68,19 +75,15 @@ define( [ 'common-ui/angular',
 
       }]);
 
-      app.config(['$translateProvider', function ($translateProvider) {
+      app.config(['$translateProvider', function($translateProvider) {
 
-        $translateProvider.useStaticFilesLoader({
-          prefix: 'i18n/messages-',
-          //suffix: '.json'
-          suffix: '.properties',
-          fileFormat: 'properties'
+          $translateProvider.useLoader('$translatePropertiesFilesLoader', {
+              prefix: 'i18n/messages-'
+          });
 
-        });
-        // TODO: SESSION_LOCALE AS INJECTED VARIABLE INSTEAD OF GLOBAL
-        $translateProvider.preferredLanguage(SESSION_LOCALE)
-            .fallbackLanguage('en');
-
+          // TODO: SESSION_LOCALE AS INJECTED VARIABLE INSTEAD OF GLOBAL
+          $translateProvider.preferredLanguage(SESSION_LOCALE)
+              .fallbackLanguage('en');
       }]);
 
       //enable CORS in Angular http requests
